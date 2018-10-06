@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import storebook.olga.bsto.domain.Sbook;
 import storebook.olga.bsto.domain.SbookRepository;
+import storebook.olga.bsto.domain.CategoryRepository;
 
 
 
@@ -18,20 +19,23 @@ public class SbookController {
 	@Autowired
 	private SbookRepository repository;
 	
+	@Autowired
+	private CategoryRepository catrepository;
+	
 	
 	@RequestMapping(value="/booklist", method=RequestMethod.GET)
     public String bookList(Model model) {
-    	
-
-   model.addAttribute("sbooks", repository.findAll());
+    	model.addAttribute("sbooks", repository.findAll());
         return "booklist";
     }
 	
 	@RequestMapping(value = "/add")
 	public String addBook(Model model){
 	model.addAttribute("sbook", new Sbook());
+	model.addAttribute("categories", catrepository.findAll());
 	return "addbook";
 	}
+	
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public String save(Sbook sbook){
 	repository.save(sbook);
@@ -45,11 +49,12 @@ public class SbookController {
 	}
 	
 	@RequestMapping(value = "/edit/{id}")
-	public String addBook(@PathVariable("id") Long sbookId, Model model){
+	public String editBook(@PathVariable("id") Long sbookId, Model model){
 	model.addAttribute("sbook", repository.findById(sbookId));
+	model.addAttribute("categories", catrepository.findAll());
 	return "editbook";
 	}
-	
+
 }
 
 

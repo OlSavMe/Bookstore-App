@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Bean;
 
 import storebook.olga.bsto.domain.Sbook;
 import storebook.olga.bsto.domain.SbookRepository;
+import storebook.olga.bsto.domain.Category;
+import storebook.olga.bsto.domain.CategoryRepository;
 
 @SpringBootApplication
 public class BstoApplication {
@@ -22,11 +24,17 @@ public class BstoApplication {
 	
 	
 	@Bean
-	public CommandLineRunner sbookDe(SbookRepository repository) {
+	public CommandLineRunner sbookDe(SbookRepository repository, CategoryRepository catrepository) {
 		return (args) -> {
+			log.info("save books");
 		
-			repository.save(new Sbook ("One Book", "Some Authour", "1910", "129345", 33));
-			repository.save(new Sbook("Another Book", "Another Auhour", "1999", "123987", 55));	
+			catrepository.save(new Category ("Fairy Tales"));
+			catrepository.save(new Category ("Novels"));
+			catrepository.save(new Category ("Historical Novels"));
+			catrepository.save(new Category ("Detective Stories"));
+		
+			repository.save(new Sbook ("One Book", "Some Authour", "1910", "129345", 33, catrepository.findByName("Novels").get(0)));
+			repository.save(new Sbook("Another Book", "Another Auhour", "1999", "123987", 55, catrepository.findByName("Historical Novels").get(0)));	
 			
 			log.info("fetch all books");
 			for (Sbook sbook : repository.findAll()) {
