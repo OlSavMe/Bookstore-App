@@ -1,5 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <title>List of Books</title>
     <link type="text/css" rel="stylesheet"  href= "css/bootstrap.min.css"  th:href="@{css/bootstrap.min.css}" />
@@ -8,7 +10,9 @@
 <body>
 <div class="container">
 <h2>Books</h2>
-
+<div>
+		<h3 th:inline="text">Welcome [[${#httpServletRequest.remoteUser}]]</h3>
+	</div>
 
     	<table class="table table-striped">
     	<thead>
@@ -18,6 +22,7 @@
     	<th>ISBN</th>
     	<th>year</th>
     	<th>Category</th>
+    	
     	</tr>
     	</thead>
     
@@ -28,13 +33,18 @@
     	<td th:text="${sbook.isbn}"></td>
     	<td th:text="${sbook.year}"></td>
     	<td th:text="${sbook.category.name}"></td>
-    	<td><a class="btn btn-danger" th:href="@{/delete/{id}(id=${sbook.id})}">Delete</a></td>
+    	<td sec:authorize="hasRole('ADMIN')"><a class="btn btn-danger" th:href="@{/delete/{id}(id=${sbook.id})}">Delete</a></td>
     	<td><a class="btn btn-success" th:href="@{/edit/{id}(id=${sbook.id})}">Edit</a></td>
   		</tr>
   		</tbody>
   		
     	</table>
  <a href="/add" class="btn btn-success">Add Book</a>
+ <div>
+		<form th:action="@{/logout}" method="post">
+			<input type="submit" value="Sign Out" class="btn btn-danger"/>
+		</form>
+	</div>
  </div>
 </body>
 </html>
